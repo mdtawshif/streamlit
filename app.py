@@ -17,6 +17,7 @@ import plotly.graph_objects as go
 from sqlalchemy import create_engine
 from mysql.connector.constants import ClientFlag
 from uuid import uuid4
+from db_connection import get_database_connection
 
 st.set_page_config(
     page_title="Admission Form",
@@ -27,20 +28,20 @@ st.set_page_config(
  #database localhost connection
 # @st.cache()
 
-def get_database_connection():
-     db = mysql.connect(host = "localhost",
-                       user = "root",
-                       passwd = "Tawshif.03",
-                       database = "PayslipDB",
-                       auth_plugin='mysql_native_password')
-     cursor = db.cursor()
-     return cursor, db
+#def get_database_connection():
+ #    db = mysql.connect(host = "localhost",
+  #                     user = "root",
+   #                    passwd = "Tawshif.03",
+    #                   database = "PayslipDB",
+     #                  auth_plugin='mysql_native_password')
+    # cursor = db.cursor()
+    # return cursor, db
  
 cursor, db = get_database_connection()
  
-cursor.execute("SHOW DATABASES")
+#cursor.execute("SHOW DATABASES")
  
-databases = cursor.fetchall() ## it returns a list of all databases present
+#databases = cursor.fetchall() ## it returns a list of all databases present
  
 # st.write(databases)
 #cursor.execute('''CREATE TABLE information (id varchar(255),
@@ -89,11 +90,13 @@ def form():
     id=str(id)[:10]
     with st.form(key='member form'):
         sname=st.text_input('Student Name')
+        email=st.text_input('Email')
+        date_of_birth=st.text_input('Date of Birth')
         re_date=st.date_input('Registration Date')
         status='In Progress'
         if st.form_submit_button('Submit'):
-            query = f'''INSERT INTO information (id,studentname,
-                                                re_date,status) VALUES ('{id}','{sname}',
+            query = f'''INSERT INTO information (id,sname,email,date_of_birth,
+                                                re_date,status) VALUES ('{id}','{sname}','{email}','{date_of_birth}',
                                                 '{re_date}','{status}')'''
             cursor.execute(query)
             db.commit()
